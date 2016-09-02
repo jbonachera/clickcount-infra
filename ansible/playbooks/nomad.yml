@@ -1,0 +1,8 @@
+---
+- hosts: nomad
+  roles:
+    - base
+    - nomad
+    - docker
+    - consul
+    - traefik

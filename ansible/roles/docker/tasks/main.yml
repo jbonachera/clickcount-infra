@@ -1,0 +1,8 @@
+---
+- name: install docker
+  pacman:
+    name: docker
+- name: enable docker
+  service:
+    name: docker
+    enabled: yes

@@ -1,0 +1,35 @@
+---
+- name: download consul
+  get_url:
+    url: https://releases.hashicorp.com/consul/0.6.4/consul_0.6.4_linux_amd64.zip
+    validate_certs: no
+    dest: /tmp/consul.zip
+- name: install consul
+  unarchive:
+    copy: no
+    src: /tmp/consul.zip
+    dest: /usr/local/bin
+- name: install consul initscript
+  copy:
+    src: consul.service
+    dest: /etc/systemd/system/consul.service
+- name: create consul user
+  user:
+    name: consul
+    system: yes
+- name: create consul config dir
+  file:
+    name: /etc/consul
+    state: directory
+    owner: consul
+    group: consul
+- name: create consul data dir
+  file:
+    name: /var/lib/consul
+    state: directory
+    owner: consul
+    group: consul
+- name: enable consul
+  service:
+    name: consul
+    enabled: yes

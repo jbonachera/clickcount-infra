@@ -1,0 +1,50 @@
+################################################################
+# Global configuration
+################################################################
+
+# Timeout in seconds.
+# Duration to give active requests a chance to finish during hot-reloads
+# Optional
+# Default: 10
+# graceTimeOut = 10
+
+# Traefik logs file
+# If not defined, logs to stdout
+# Optional
+traefikLogsFile = "/var/log/traefik/traefik.log"
+
+# Access logs file
+# Optional
+accessLogsFile = "/var/log/traefik/access.log"
+
+defaultEntryPoints = ["null"]
+
+[entryPoints]
+  [entryPoints.admin]
+  address = ":8080"
+  [entryPoints.null]
+  address = "127.0.0.1:9000"
+  [entryPoints.http]
+  address = ":80"
+[web]
+
+# Web administration port
+# Required
+address = ":8081"
+
+[consulCatalog]
+
+# Consul server endpoint
+# Required
+endpoint = "127.0.0.1:8500"
+
+# Enable watch Consul changes
+# Optional
+# Prefix used for KV store.
+# Optional
+prefix = "traefik"
+
+# Override default configuration template. For advanced users :)
+# Optional
+# filename = "consul.tmpl"
+

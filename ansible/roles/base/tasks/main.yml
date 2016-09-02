@@ -1,0 +1,10 @@
+---
+- name: install unzip
+  pacman:
+    name: unzip
+    update_cache: yes
+
+- name: install ca-certificates
+  pacman:
+    name: ca-certificates
+

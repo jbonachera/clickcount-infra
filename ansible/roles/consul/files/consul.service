@@ -1,0 +1,15 @@
+[Unit]
+Description=Consul Service
+After=cloud-init.service
+Requirer=cloud-init.service
+
+[Service]
+Type=simple
+EnvironmentFile=-/etc/sysconfig/consul
+WorkingDirectory=/var/lib/consul
+User=consul
+ExecStart=/usr/local/bin/consul agent -server -bootstrap-expect 2 -data-dir /var/lib/consul -ui-dir /var/lib/consul-ui/ -config-dir /etc/consul
+
+[Install]
+WantedBy=multi-user.target
+

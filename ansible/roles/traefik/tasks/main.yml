@@ -1,0 +1,27 @@
+---
+- name: download traefik
+  get_url:
+    url: https://github.com/containous/traefik/releases/download/v1.0.2/traefik_linux-amd64
+    validate_certs: yes
+    dest: /usr/local/bin/traefik
+    mode: 0755
+- name: create traefik log dir
+  file:
+    name: /var/log/traefik
+    state: directory
+- name: create traefik config dir
+  file:
+    name: /etc/traefik/
+    state: directory
+- name: install traefik config
+  copy:
+    src: traefik.toml
+    dest: /etc/traefik/traefik.toml
+- name: install traefik initscript
+  copy:
+    src: traefik.service
+    dest: /etc/systemd/system/traefik.service
+- name: enable traefik
+  service:
+    name: traefik
+    enabled: yes                                                                                 
