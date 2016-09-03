@@ -20,6 +20,7 @@ cat > /etc/consul/addresses.json <<EOF
   "advertise_addr": "${self.private_ip}"
 }
 EOF
+chown consul: /etc/consul/addresses.json
 cat >> /etc/traefik/traefik.toml << EOF
 [file]
 [frontends]
