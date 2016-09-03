@@ -29,3 +29,21 @@
   service:
     name: nomad
     enabled: yes
+- name: copy bootstrap script
+  copy:
+    src: import_nomad_jobs.py
+    mode: 755
+    dest: /usr/local/bin/import_nomad_jobs.py
+- name: copy bootstrap unit
+  copy:
+    src: import_nomad_jobs.service
+    mode: 644
+    dest: /etc/systemd/system/import_nomad_jobs.service
+- name: enable nomad bootstrap
+  service:
+    name: import_nomad_jobs
+    enabled: yes
+- name: sync nomad jobs
+  copy:
+    src: jobs
+    dest: /etc/nomad/

@@ -1,0 +1,11 @@
+[Unit]
+Description=Import jobs from /etc/nomad/jobs
+After=nomad.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/import_nomad_jobs.py
+
+[Install]
+WantedBy=multi-user.target
+
