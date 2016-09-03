@@ -1,8 +1,8 @@
 {
     "Job": {
         "Region": "global",
-        "ID": "clickcount",
-        "Name": "clickcount",
+        "ID": "nomadui",
+        "Name": "nomadui",
         "Type": "service",
         "Priority": 50,
         "AllAtOnce": false,
@@ -18,7 +18,7 @@
         ],
         "TaskGroups": [
             {
-                "Name": "clickcount",
+                "Name": "nomadui",
                 "Count": 2,
                 "Constraints": null,
                 "Tasks": [
@@ -27,26 +27,26 @@
                         "Driver": "docker",
                         "User": "",
                         "Config": {
-                            "image": "jbonachera/clickcount:v0.1",
+                            "image": "iverberk/nomad-ui:0.1.0",
                             "port_map": [
                                 {
-                                    "web": 8080
+                                    "web": 3000
                                 }
                             ]
                         },
                         "Constraints": null,
                         "Env":{
-                          "redis_host": "52.59.157.34"
+                          "NOMAD_ADDR": "172.17.0.1"
                         },
                         "Services": [
                             {
                                 "Id": "",
-                                "Name": "clickcount-front",
+                                "Name": "nomadui-front",
                                 "Tags": [
                                     "traefik.enable=true",
                                     "traefik.frontend.entryPoints=http",
                                     "traefik.backend.weight=10",
-                                    "traefik.frontend.rule=Host:clickcount.cloud.vx-labs.net"
+                                    "traefik.frontend.rule=Host:nomadui.app.cloud.vx-labs.net"
                                 ],
                                 "PortLabel": "web",
                                 "Checks": [
