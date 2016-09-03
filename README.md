@@ -1,10 +1,10 @@
 # ClickCount infra
 AWS project to run the ClickCount Application.
 
-This is an example implementation of an image-based infrastructure, using Packer (https://www.packer.io/), Terraform (https://www.terraform.io/), Ansible (https://www.ansible.com/) for image provisioning, running on Amazon Web Services.
+This is a sample implementation of an image-based infrastructure, using Packer (https://www.packer.io/), Terraform (https://www.terraform.io/), Ansible (https://www.ansible.com/) for image provisioning, running on Amazon Web Services.
 Vagrant (https://www.vagrantup.com/) is also used for local testing.
 
-The platform, once deployed, runs Docker application using a combo of Nomad (https://www.nomadproject.io/), Consul (https://www.consul.io/) and Traefik (http://traefik.io/) for service exposition.
+The platform, once deployed, runs Docker applications using a combo of Nomad (https://www.nomadproject.io/), Consul (https://www.consul.io/) and Traefik (http://traefik.io/) for service exposition.
 
 ## Requirements
 
@@ -20,7 +20,7 @@ Don't forget to tweak SOA caching and negative-caching values before testing (wa
 
 You will need to install at least Packer and Ansible on your host before you can build this project.
 
-Building require some environment variables:
+Building requires some environment variables:
 
   * TF_VAR_aws_access_key: AWS access key
   * TF_VAR_aws_secret_key: AWS secret key
@@ -37,9 +37,9 @@ You can build the project by running `make build` in the project folder.
 
 Building this project runs the following tasks:
   
-  * Spawn a base AMI on AWS
-  * Configure it with Ansible, applying the "nomad" playbook
-  * Shutdown the instance, and create an AMI from it, named "nomad-host-{{timestamp}}".
+  * Spawns a base AMI on AWS
+  * Configures it with Ansible, applying the "nomad" playbook
+  * Shutdowns the instance, and create an AMI from it, named "nomad-host-{{timestamp}}".
 
 All those steps are handled by Packer, using Ansible and AWS API under the hood.
 Packer configuration is stored in packer/nomad.json.
@@ -58,7 +58,7 @@ It will:
   * Output the ELB DNS name and instances IP addresses on stdout
 
 Those steps done, Nomad HTTP API will be accessible on `http://nomad.<your domain>:8080/` and applications on `http://<app-name>.app.<your domain/`.
-Nomad API access require you to include a `X-Auth-Token` header, with the value provided in `the lb_auth_token` variable. It defaults to `Secret123`.
+Nomad API access requires you to include a `X-Auth-Token` header, with the value provided in the `TF_VAR_lb_auth_token` variable. It defaults to `Secret123`.
 
 Upon run, nomad jobs described in ansible/roles/nomad/files/jobs/ will be created if they do not already exist. This is done by the `import_nomad_jobs` systemd unit, calling a python script.
 This script will wait for the cluster to boot. After that, it will look for the cluster leader, and import the jobs if the current node is the cluster leader.
@@ -79,7 +79,7 @@ It will not destroy the other resources (unless you messed up with the tfstate* 
 You can use Vagrant to spawn a local Nomad cluster: `vagrant up`.
 After editing Ansible roles, you can apply changes on the cluster with `vagrant provision`.
 
-Very few tests are presents in tests/ folder, using Python testinfra. 
+A few tests are present in tests/ folder, using Python testinfra. 
 You can run them with
 
 ```
@@ -98,7 +98,7 @@ testinfra -v  tests/nomad.py --connection=ssh --hosts=<host> --ssh-config=ssh_co
 ## TODO
 
   * Replace the X-Auth-Token with a Basic Authorization header, to allow using the command-line nomad client
-  * Remove the bootstrapping over SSH step (with a systemd-unit, maybe, like we do for Nomad jobs creation?)
+  * Remove the bootstrapping over SSH step (and replace it with a systemd-unit, maybe, like we do for Nomad jobs creation?)
   * Implement rolling replacement of Nomad hosts
   * Repair the Docker image
-  * Execute all action from a CI tool, when a git event occurs
+  * Execute all actions from a CI tool, when a git event occurs
