@@ -1,4 +1,5 @@
 *.tfstate*
+*.retry
 credentials
 .vagrant
 .cache
