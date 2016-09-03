@@ -1,6 +1,6 @@
 all: build run
 build:
-	packer-io build nomad.packer.json
+	packer-io build packer/nomad.json
 run:
 	cd terraform && terraform apply
 destroy:
