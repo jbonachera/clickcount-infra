@@ -74,6 +74,27 @@ The script runs on all the nomad hosts at boot.
 You can destroy all the resources managed by Terraform by running `make destroy`.
 It will not destroy the other resources (unless you messed up with the tfstate* files Terraform uses to manage it state), so it is quite safe.
 
+## Development
+
+You can use Vagrant to spawn a local Nomad cluster: `vagrant up`.
+After editing Ansible roles, you can apply changes on the cluster with `vagrant provision`.
+
+Very few tests are presents in tests/ folder, using Python testinfra. 
+You can run them with
+
+```
+vagrant ssh-config > .vagrant/ssh-config
+testinfra --hosts=default --ssh-config=.vagrant/ssh-config tests/nomad.py 
+```
+
+If you want to run the tests on a remote host, you can run:
+
+```
+testinfra -v  tests/nomad.py --connection=ssh --hosts=<host> --ssh-config=ssh_config
+```
+
+(The `ssh_config` file tells openssh client to ignore the remote host key verification. *Use only this for testing on ephemeral hosts* )
+
 ## TODO
 
   * Replace the X-Auth-Token with a Basic Authorization header, to allow using the command-line nomad client
