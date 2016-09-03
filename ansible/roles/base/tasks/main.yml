@@ -8,3 +8,7 @@
   pacman:
     name: ca-certificates
 
+- name: install python
+  pacman:
+    name: python
+
