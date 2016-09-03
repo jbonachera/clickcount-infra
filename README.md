@@ -54,13 +54,17 @@ It will:
   * Look for the most recent AMI named "nomad-host-*"
   * Spawn 3 instances using the AMI, and inject their IP addresses into consul and nomad configuration.
   * Create the required security groups, ELB and DNS records
-  * Bootstrap the cluster using "consul join" the first host, over SSH
   * Output the ELB DNS name and instances IP addresses on stdout
 
 Those steps done, Nomad HTTP API will be accessible on `http://nomad.<your domain>:8080/` and applications on `http://<app-name>.app.<your domain/`.
 Nomad API access requires you to include a `X-Auth-Token` header, with the value provided in the `TF_VAR_lb_auth_token` variable. It defaults to `Secret123`.
 
-Upon run, nomad jobs described in ansible/roles/nomad/files/jobs/ will be created if they do not already exist. This is done by the `import_nomad_jobs` systemd unit, calling a python script.
+At first cluster boot, Cloud-init will execute a user-data script to inject instance IP address in consul and nomad configuration files.
+
+Consul agents will find themselves using the `consul.discovery.<your dns zone>` DNS record, and they will form a Consul cluster. This is done by a script in `/usr/local/bin/bootstrap_consul.sh`.
+
+Nomad will start, and a elect a Nomad cluster leader.
+Then, nomad jobs described in ansible/roles/nomad/files/jobs/ will be created if they do not already exist. This is done by the `import_nomad_jobs` systemd unit, calling a python script.
 This script will wait for the cluster to boot. After that, it will look for the cluster leader, and import the jobs if the current node is the cluster leader.
 The script runs on all the nomad hosts at boot.
 
@@ -98,7 +102,6 @@ testinfra -v  tests/nomad.py --connection=ssh --hosts=<host> --ssh-config=ssh_co
 ## TODO
 
   * Replace the X-Auth-Token with a Basic Authorization header, to allow using the command-line nomad client
-  * Remove the bootstrapping over SSH step (and replace it with a systemd-unit, maybe, like we do for Nomad jobs creation?)
   * Implement rolling replacement of Nomad hosts
   * Repair the Docker image
   * Execute all actions from a CI tool, when a git event occurs
