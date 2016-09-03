@@ -2,6 +2,7 @@ variable "nomad_instance_count" {
     default = "3"
 }
 variable "aws_access_key" {}
+variable "aws_ssh_key" {}
 variable "aws_secret_key" {}
 variable "aws_region" {}
 variable "lb_auth_token" {}

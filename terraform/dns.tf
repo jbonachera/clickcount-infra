@@ -20,3 +20,10 @@ resource "aws_route53_record" "service" {
     }
 }
 
+resource "aws_route53_record" "consul" {
+    zone_id = "${var.zone_id}"
+    name = "consul.discovery.${var.zone}"
+    type = "A"
+    ttl = "10"
+    records = ["${aws_instance.nomad.*.private_ip}"]
+}

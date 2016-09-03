@@ -1,0 +1,14 @@
+[Unit]
+Description=Bootstrap Consul Service
+After=consul.service
+
+[Service]
+Type=simple
+EnvironmentFile=-/etc/sysconfig/consul-bootstrap
+WorkingDirectory=/var/lib/consul
+User=consul
+ExecStart=/usr/local/bin/bootstrap_consul.sh
+
+[Install]
+WantedBy=multi-user.target
+

@@ -33,3 +33,12 @@
   service:
     name: consul
     enabled: yes
+- name: copy bootstrap consul script
+  copy:
+    src: bootstrap_consul.sh
+    mode: 0755
+    dest: /usr/local/bin/bootstrap_consul.sh
+- name: copy bootstrap_consul initscript
+  copy:
+    dest: /etc/systemd/system/bootstrap_consul.service
+    src: bootstrap_consul.service

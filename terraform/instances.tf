@@ -3,25 +3,25 @@ resource "aws_instance" "nomad" {
   ami           = "${data.aws_ami.nomad.id}"
   instance_type = "t2.micro"
   security_groups = ["${aws_security_group.nomad.name}"]
-  key_name = "jubon"
-  provisioner "remote-exec" {
-    inline = <<CMD
+  key_name = "${var.aws_ssh_key}"
+  user_data = <<CMD
+#!/bin/bash
 cat > /etc/nomad/addresses.hcl <<EOF
 bind_addr= "0.0.0.0"
 advertise {
-  http = "${self.private_ip}:4646"
-  rpc = "${self.private_ip}:4647"
-  serf = "${self.private_ip}:4648"
+  http = "$(ip -f inet -o a show dev eth0 | awk '{print $4; exit}' | cut -d / -f 1):4646"
+  rpc = "$(ip -f inet -o a show dev eth0 | awk '{print $4; exit}' | cut -d / -f 1):4647"
+  serf = "$(ip -f inet -o a show dev eth0 | awk '{print $4; exit}' | cut -d / -f 1):4648"
 }
 EOF
 cat > /etc/consul/addresses.json <<EOF
 {
   "bind_addr": "0.0.0.0",
-  "advertise_addr": "${self.private_ip}"
+  "advertise_addr": "$(ip -f inet -o a show dev eth0 | awk '{print $4; exit}' | cut -d / -f 1)"
 }
 EOF
 chown consul: /etc/consul/addresses.json
-cat >> /etc/traefik/traefik.toml << EOF
+echo '
 [file]
 [frontends]
   [frontends.nomad-http]
@@ -34,11 +34,13 @@ cat >> /etc/traefik/traefik.toml << EOF
     [backends.local-nomad.servers.localhost]
     url = "http://localhost:4646/"
     weight = 10
-EOF
+' | tee -a /etc/traefik.toml
 systemctl restart traefik
 systemctl restart consul
 systemctl restart nomad
+mkdir /etc/sysconfig/
+echo DISCOVERY_DOMAIN=consul.discovery.${var.zone} > /etc/sysconfig/consul-bootstrap
+systemctl start bootstrap_consul
 CMD
-  }
 }
 
