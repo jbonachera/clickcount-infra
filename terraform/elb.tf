@@ -24,7 +24,8 @@ resource "aws_elb" "service_elb" {
   connection_draining = true
   connection_draining_timeout = 400
 
-}                                                                                                                                                                                                     resource "aws_elb" "nomad_elb" {
+}
+resource "aws_elb" "nomad_elb" {
   name = "nomad-elb"
   availability_zones = ["eu-central-1b"]
   security_groups = ["${aws_security_group.nomad.id}"]
