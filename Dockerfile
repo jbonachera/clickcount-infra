@@ -10,3 +10,4 @@ RUN pacman -S --noconfirm ansible unzip make openssh && \
 COPY . /usr/local/src/clickcount-infra/
 WORKDIR /usr/local/src/clickcount-infra/
 ENTRYPOINT ["/bin/bash", "/usr/local/src/clickcount-infra/scripts/entrypoint.sh"]
+VOLUME terraform/state
