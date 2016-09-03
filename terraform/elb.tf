@@ -1,6 +1,7 @@
 resource "aws_elb" "service_elb" {
   name = "service-elb"
   availability_zones = ["eu-central-1b"]
+  security_groups = ["${aws_security_group.nomad.id}"]
 
   listener {
     # We us TCP here to allow websocket connexions
@@ -26,6 +27,7 @@ resource "aws_elb" "service_elb" {
 }                                                                                                                                                                                                     resource "aws_elb" "nomad_elb" {
   name = "nomad-elb"
   availability_zones = ["eu-central-1b"]
+  security_groups = ["${aws_security_group.nomad.id}"]
 
   listener {
     instance_port = 8080
