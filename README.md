@@ -8,6 +8,8 @@ The platform, once deployed, runs Docker applications using a combo of Nomad (ht
 
 ## Requirements
 
+You SSH public key must be imported in AWS.
+
 A DNS zone must be created in AWS.
 Terraform could handle that, but NS servers of the zone change every time a zone is destroyed and created. 
 I run this project under a sub-domain of another zone, and changing NS servers every cycle was too painful.
@@ -25,6 +27,7 @@ Building requires some environment variables:
   * TF_VAR_aws_access_key: AWS access key
   * TF_VAR_aws_secret_key: AWS secret key
   * TF_VAR_aws_region: AWS region
+  * TF_VAR_aws_ssh_key: the SSH key name to inject into instances via cloud-init
   * TF_VAR_zone_id: AWS Route53 zone ID
   * TF_VAR_zone: AWS Route53 zone name
   * TF_VAR_lb_auth_token: the "token" to access nomad API (see below)
