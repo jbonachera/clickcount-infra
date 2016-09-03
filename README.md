@@ -16,6 +16,19 @@ I run this project under a sub-domain of another zone, and changing NS servers e
 
 Don't forget to tweak SOA caching and negative-caching values before testing (waiting 1h for an NXDOMAIN to expire is annoying).
 
+## Docker
+
+A docker image with Terraform, Ansible and Packer can be build with `docker build -t builder .`, and run with 
+```
+docker run --rm -it -v $(pwd)/terraform/state/:/usr/local/src/clickcount-infra/terraform/state/ builder
+```
+
+The Docker image accepts the same arguments as `make`: build, run and destroy.
+
+Use this if you don't want to, or can't, install those tools on your computer.
+
+All the environment variables described in Environment Setup can be passed with -e, just strip the `TF_VAR_` part (`TF_VAR_zone` becomes juste `zone`)
+
 ## Building
 
 ### Environment setup
@@ -106,5 +119,4 @@ testinfra -v  tests/nomad.py --connection=ssh --hosts=<host> --ssh-config=ssh_co
 
   * Replace the X-Auth-Token with a Basic Authorization header, to allow using the command-line nomad client
   * Implement rolling replacement of Nomad hosts
-  * Repair the Docker image
   * Execute all actions from a CI tool, when a git event occurs
