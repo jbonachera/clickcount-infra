@@ -44,7 +44,8 @@ class Main:
         Check if the curent node is a cluster leader
         """
         self.nomad.request("GET", "/v1/agent/self")
-        self_status = json.loads(self.nomad.getresponse().read().decode())
+        response = self.nomad.getresponse()
+        self_status = json.loads(response.read().decode())
         nomad_stats = self_status.get('stats').get('nomad')
         return nomad_stats.get('leader') is "true"
     def cluster_ready(self):
