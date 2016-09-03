@@ -1,5 +1,5 @@
 resource "aws_instance" "nomad" {
-  count = 3
+  count = "${var.nomad_instance_count}"
   ami           = "${data.aws_ami.nomad.id}"
   instance_type = "t2.micro"
   security_groups = ["${aws_security_group.nomad.name}"]
