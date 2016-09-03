@@ -1,6 +1,6 @@
 resource "aws_route53_record" "nomad" {
     zone_id = "${var.zone_id}"
-    name = "${var.nomad_cname}.${var.zone}"
+    name = "${var.nomad_cname}"
     type = "A"
     alias {
       name = "${aws_elb.nomad_elb.dns_name}"
@@ -11,7 +11,7 @@ resource "aws_route53_record" "nomad" {
 
 resource "aws_route53_record" "service" {
     zone_id = "${var.zone_id}"
-    name = "${var.service_cname}.${var.zone}"
+    name = "${var.service_cname}"
     type = "A"
     alias {
       name = "${aws_elb.service_elb.dns_name}"
@@ -22,7 +22,7 @@ resource "aws_route53_record" "service" {
 
 resource "aws_route53_record" "consul" {
     zone_id = "${var.zone_id}"
-    name = "consul.discovery.${var.zone}"
+    name = "consul.discovery"
     type = "A"
     ttl = "10"
     records = ["${aws_instance.nomad.*.private_ip}"]
