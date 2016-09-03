@@ -19,7 +19,7 @@ job "clickcount-staging" {
 		task "front" {
 			driver = "docker"
 			config {
-				image = "jbonachera/clickcount-staging:dev"
+				image = "jbonachera/clickcount:dev"
 				port_map {
 					web = 8080
 				}
