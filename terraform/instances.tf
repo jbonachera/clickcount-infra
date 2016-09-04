@@ -34,7 +34,7 @@ echo '
     [backends.local-nomad.servers.localhost]
     url = "http://localhost:4646/"
     weight = 10
-' | tee -a /etc/traefik.toml
+' | tee -a /etc/traefik/traefik.toml
 systemctl restart traefik
 systemctl restart consul
 systemctl restart nomad
