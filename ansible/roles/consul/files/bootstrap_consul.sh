@@ -7,6 +7,9 @@ while [ $count -lt 2 ]; do
   sleep 0.5
 done
 for host in $consul_hosts; do
-        consul join $host
+        while ! consul join $host; do
+          sleep 0.5
+        done
+
 done
 

@@ -8,14 +8,13 @@ import glob
 import json
 import time
 import subprocess
-import http.client
+import requests
 
 class Main:
     """
     Import all the jobs defined in /etc/nomad/jobs if they do not exist
     """
     def __init__(self):
-        self.nomad = http.client.HTTPConnection('localhost:4646')
         while not self.cluster_ready():
             time.sleep(1)
         if self.cluster_leader:
@@ -35,17 +34,14 @@ class Main:
         """
         Check if a job exists in Nomad
         """
-        self.nomad.request("GET", "/v1/job/%s" % job_id)
-        response = self.nomad.getresponse()
-        response.read()
-        return response.status == 200
+        response = requests.get("http://localhost:4646//v1/job/%s" % job_id)
+        return response.status_code == 200
     def cluster_leader(self):
         """
         Check if the curent node is a cluster leader
         """
-        self.nomad.request("GET", "/v1/agent/self")
-        response = self.nomad.getresponse()
-        self_status = json.loads(response.read().decode())
+        response = requests.get('http://localhost:4646/v1/agent.self')
+        self_status = response.json()
         nomad_stats = self_status.get('stats').get('nomad')
         return nomad_stats.get('leader') is "true"
     def cluster_ready(self):
@@ -53,13 +49,10 @@ class Main:
         Check if the current node is in a ready cluster
         """
         try:
-            self.nomad.request("GET", "/v1/status/leader")
-            response = self.nomad.getresponse()
-            leader = response.read().decode()
-            if response.status is 200:
-                print("%s is a cluster leader." % leader)
+            response = requests.get('http://localhost:4646/v1/status/leader')
+            if response.status_code is 200:
                 return True
-        except ConnectionRefusedError:
+        except requests.exceptions.ConnectionError:
             print("Connection refused")
         print("No leader is present")
         return False

@@ -12,3 +12,7 @@
   pacman:
     name: python
 
+- name: install python-requests
+  pacman:
+    name: python-requests
+
