@@ -18,16 +18,33 @@ Don't forget to tweak SOA caching and negative-caching values before testing (wa
 
 ## Docker
 
-A docker image with Terraform, Ansible and Packer can be build with `docker build -t builder .`, and run with 
+A docker image with Terraform, Ansible and Packer can be build with `docker build -t builder .`.
+Use this if you don't want to, or can't, install those tools on your computer.
+It can be run with:
 ```
 docker run --rm -it -v $(pwd)/terraform/state/:/usr/local/src/clickcount-infra/terraform/state/ builder
 ```
 
 The Docker image accepts the same arguments as `make`: build, run and destroy.
 
-Use this if you don't want to, or can't, install those tools on your computer.
 
-All the environment variables described in Environment Setup can be passed with -e, just strip the `TF_VAR_` part (`TF_VAR_zone` becomes juste `zone`)
+All the environment variables described in Environment Setup below can be passed with -e, just strip the `TF_VAR_` part (`TF_VAR_zone` becomes juste `zone`):
+
+```
+docker build -t jbonachera/builder .
+docker run --rm -it -e lb_auth_token=Password \ 
+                    -e aws_access_key=<aws access key> \
+                    -e aws_secret_key=<aws secret key> \
+                    -e aws_region=eu-central-1 \
+                    -e zone_id=<zone id> \
+                    -e zone=cloud.example.net \
+                    -e aws_ssh_key=<key name> \
+                    -v $(pwd)/terraform/state/:/usr/local/src/clickcount-infra/terraform/state/ \
+                    jbonachera/builder run
+
+```
+
+If a variable is missing, you will be asked for the value.
 
 ## Building
 
