@@ -40,7 +40,7 @@ docker run --rm -it -e lb_auth_token=Password \
                     -e zone=cloud.example.net \
                     -e aws_ssh_key=<key name> \
                     -v $(pwd)/terraform/state/:/usr/local/src/clickcount-infra/terraform/state/ \
-                    jbonachera/builder run
+                    jbonachera/builder
 
 ```
 
