@@ -18,21 +18,22 @@ job "nomadui" {
 		}
 		task "front" {
 			driver = "docker"
+      env {
+        NOMAD_ENABLE="1"
+        NOMAD_ADDR="172.17.0.1"
+      }
 			config {
-				image = "iverberk/nomad-ui:0.1.0"
+				image = "jippi/hashi-ui"
 				port_map {
 					web = 3000
 				}
 			}
-                        env {
-                            NOMAD_ADDR="172.17.0.1"
-                        }
 			service {
 				name = "${TASKGROUP}-front"
 				tags = [
                                    "traefik.enable=true",
                                    "traefik.frontend.entryPoints=http",
-                                   "traefik.frontend.rule=Host:nomadui.app.nomad.training.techx.fr"
+                                   "traefik.frontend.rule=Host:hashiui.app.nomad.training.techx.fr"
                                 ]
 				port = "web"
 				check {
