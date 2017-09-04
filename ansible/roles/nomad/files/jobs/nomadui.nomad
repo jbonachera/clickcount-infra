@@ -20,7 +20,7 @@ job "nomadui" {
 			driver = "docker"
       env {
         NOMAD_ENABLE="1"
-        NOMAD_ADDR="172.17.0.1"
+        NOMAD_ADDR="http://172.17.0.1:4646"
       }
 			config {
 				image = "jippi/hashi-ui"
