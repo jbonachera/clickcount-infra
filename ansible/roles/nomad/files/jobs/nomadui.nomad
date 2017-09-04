@@ -12,7 +12,7 @@ job "nomadui" {
 		restart {
 			attempts = 10
 			interval = "5m"
-			
+
 			delay = "25s"
 			mode = "delay"
 		}
@@ -32,7 +32,7 @@ job "nomadui" {
 				tags = [
                                    "traefik.enable=true",
                                    "traefik.frontend.entryPoints=http",
-                                   "traefik.frontend.rule=Host:nomadui.app.cloud.vx-labs.net"
+                                   "traefik.frontend.rule=Host:nomadui.app.nomad.training.techx.fr"
                                 ]
 				port = "web"
 				check {
@@ -52,8 +52,6 @@ job "nomadui" {
 					}
 				}
 			}
-			
-			 
 		}
 	}
 }
